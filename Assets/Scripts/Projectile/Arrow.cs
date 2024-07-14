@@ -10,6 +10,7 @@ public class Arrow : MonoBehaviour, IProjectile {
 
     [SerializeField] private float _speed = 5f;
     [SerializeField] private float _damage = 1f;
+    private float _liveSpan = 1f;
 
 
     private void Awake () {
@@ -19,14 +20,22 @@ public class Arrow : MonoBehaviour, IProjectile {
     private void FixedUpdate () {
         if (_target != null) {
             Fly();
-        }
 
+        }
+        CheckLiveSpan();
     }
 
     private void Fly () {
         Rotate();
         _direction = (_target.position - transform.position).normalized;
         _rb.velocity = _direction * _speed;
+    }
+
+    private void CheckLiveSpan () {
+        _liveSpan -= Time.deltaTime;
+        if (_liveSpan <= 0) {
+            Destroy(gameObject);
+        }
     }
 
     public void SetTarget (Transform target) {
@@ -39,7 +48,7 @@ public class Arrow : MonoBehaviour, IProjectile {
     }
 
     private void OnCollisionEnter2D (Collision2D collision) {
-        IDamagable damagable =  collision.collider.GetComponent<IDamagable>();
+        IDamagable damagable = collision.collider.GetComponent<IDamagable>();
         damagable.TakeDamage(_damage);
         Destroy(gameObject);
     }

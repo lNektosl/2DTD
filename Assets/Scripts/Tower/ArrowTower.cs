@@ -33,7 +33,7 @@ public class ArrowTower : MonoBehaviour {
     }
 
     private void Shoot () {
-        if (_isReadyToFire && _target !=null) {
+        if (_isReadyToFire && _target != null) {
 
             GameObject projectileObj = Instantiate(_projectile, _firePoint.position, Quaternion.identity);
             IProjectile projectile = projectileObj.GetComponent<IProjectile>();
