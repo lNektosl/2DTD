@@ -17,6 +17,7 @@ public class Enemy : MonoBehaviour, IDamagable {
     private int _pathIndex = 0;
     private Vector2 _direction;
     private Vector2 _lastPosition;
+    private bool _isDead = false;
 
     private void Awake () {
         _rb = GetComponent<Rigidbody2D>();
@@ -31,6 +32,7 @@ public class Enemy : MonoBehaviour, IDamagable {
             _pathIndex++;
             if (_pathIndex == LevelManager.main.path.Length) {
                 Die();
+                return;
             }
             UpdateTarget();
         }
@@ -60,15 +62,15 @@ public class Enemy : MonoBehaviour, IDamagable {
 
     public void TakeDamage (float damage) { 
         _health -= damage;
-        if (_health <= 0) {
+        if (_health <= 0 && !_isDead) {
             Die();
         }
     }
 
     public void Die () {
+        _isDead = true;
         OnEnemyDied?.Invoke();
         Destroy(gameObject);
-        return;
     }
 
     #endregion
